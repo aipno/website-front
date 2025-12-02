@@ -28,7 +28,7 @@ export function getPastActivities() {
  * 获取最新活动
  * @returns {Promise<instance.AxiosResponse<any>>}
  */
-export function getLatestActivities() {
+export function getLatestActivities(limit = 5) {
   return instance.get(`/activities/latest?limit=${limit}`);
 }
 
