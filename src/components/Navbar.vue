@@ -1,231 +1,288 @@
 <template>
-  <nav class="navbar" :class="{ 'scrolled': isScrolled }">
+  <nav class="navbar">
     <div class="container">
-      <div class="navbar-brand">
-        <a href="/" class="logo">
-          <span class="logo-icon">🔒</span>
-          <span class="logo-text">零壹网络安全社团</span>
-        </a>
-      </div>
-      
-      <!-- 移动端菜单按钮 -->
-      <button class="menu-toggle" @click="toggleMenu" aria-label="Toggle menu">
-        <span class="menu-icon"></span>
-      </button>
-      
-      <!-- 导航菜单 -->
-      <div class="navbar-menu" :class="{ 'active': isMenuOpen }">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a href="/" class="nav-link" :class="{ active: $route.path === '/' }" @click="closeMenu">首页</a>
-          </li>
-          <li class="nav-item">
-            <a href="/about" class="nav-link" :class="{ active: $route.path === '/about' }" @click="closeMenu">关于我们</a>
-          </li>
-          <li class="nav-item">
-            <a href="/activities" class="nav-link" :class="{ active: $route.path === '/activities' }" @click="closeMenu">社团活动</a>
-          </li>
-          <li class="nav-item">
-            <a href="/members" class="nav-link" :class="{ active: $route.path === '/members' }" @click="closeMenu">社团成员</a>
-          </li>
-          <li class="nav-item">
-            <a href="/contact" class="nav-link" :class="{ active: $route.path === '/contact' }" @click="closeMenu">联系我们</a>
+      <div class="navbar-content">
+        <div class="navbar-logo">
+          <a class="logo-link" href="/">
+            <span class="logo-text">零壹网络安全社团</span>
+          </a>
+        </div>
+
+        <!-- 桌面导航 -->
+        <ul class="navbar-menu desktop-menu">
+          <li v-for="item in navItems" :key="item.path" class="navbar-item">
+            <a
+                :class="{ active: route.path === item.path }"
+                :href="item.path"
+                class="navbar-link"
+            >
+              {{ item.label }}
+            </a>
           </li>
         </ul>
+
+        <!-- 移动端导航 -->
+        <div class="mobile-menu-container">
+          <button class="mobile-menu-toggle" @click="toggleMobileMenu">
+            <span class="menu-icon">{{ isMobileMenuOpen ? '✕' : '☰' }}</span>
+          </button>
+
+          <ul v-if="isMobileMenuOpen" class="navbar-menu mobile-menu">
+            <li v-for="item in navItems" :key="item.path" class="navbar-item">
+              <a
+                  :class="{ active: route.path === item.path }"
+                  :href="item.path"
+                  class="navbar-link"
+                  @click="toggleMobileMenu"
+              >
+                {{ item.label }}
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </nav>
 </template>
 
-<script>
-export default {
-  name: 'Navbar',
-  data() {
-    return {
-      isMenuOpen: false,
-      isScrolled: false
-    }
-  },
-  mounted() {
-    // 监听滚动事件
-    window.addEventListener('scroll', this.handleScroll)
-  },
-  beforeUnmount() {
-    window.removeEventListener('scroll', this.handleScroll)
-  },
-  methods: {
-    toggleMenu() {
-      this.isMenuOpen = !this.isMenuOpen
-    },
-    closeMenu() {
-      this.isMenuOpen = false
-    },
-    handleScroll() {
-      // 当滚动超过50px时，添加scrolled类
-      this.isScrolled = window.scrollY > 50
-    }
-  }
+<script setup>
+import {ref} from 'vue'
+import {useRoute} from 'vue-router'
+
+const route = useRoute()
+const isMobileMenuOpen = ref(false)
+
+const navItems = [
+  {path: '/', label: '首页'},
+  {path: '/about', label: '关于我们'},
+  {path: '/activities', label: '社团活动'},
+  {path: '/members', label: '社团成员'},
+  {path: '/contact', label: '联系我们'}
+]
+
+const toggleMobileMenu = () => {
+  isMobileMenuOpen.value = !isMobileMenuOpen.value
 }
 </script>
 
 <style scoped>
-/* 导航栏基础样式 */
 .navbar {
-  transition: all 0.3s ease;
+  height: 64px;
+  line-height: 5vh;
+  background-color: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
+  transition: all var(--transition-base);
+  position: relative;
 }
 
-/* 滚动时的导航栏样式 */
-.navbar.scrolled {
-  box-shadow: var(--shadow-lg);
-  background-color: rgba(13, 27, 42, 0.95);
-  backdrop-filter: blur(10px);
+.navbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
 }
 
-/* Logo样式 */
-.logo {
+.navbar-logo {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 1.5rem;
-  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
   text-decoration: none;
-  color: white;
-  transition: all 0.3s ease;
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: var(--font-size-lg);
+  transition: all var(--transition-base);
+  padding: var(--spacing-8) 0;
 }
 
-.logo-icon {
-  font-size: 1.8rem;
+.logo-link:hover {
+  color: var(--primary-color);
 }
 
-/* 菜单切换按钮 */
-.menu-toggle {
-  display: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0.5rem;
-  z-index: 1001;
-}
-
-.menu-icon {
-  display: block;
-  width: 25px;
-  height: 3px;
-  background-color: white;
-  position: relative;
-  transition: all 0.3s ease;
-}
-
-.menu-icon::before,
-.menu-icon::after {
-  content: '';
-  position: absolute;
-  width: 25px;
-  height: 3px;
-  background-color: white;
-  transition: all 0.3s ease;
-}
-
-.menu-icon::before {
-  top: -8px;
-}
-
-.menu-icon::after {
-  top: 8px;
-}
-
-/* 菜单打开状态 */
-.menu-toggle.active .menu-icon {
-  background-color: transparent;
-}
-
-.menu-toggle.active .menu-icon::before {
-  transform: rotate(45deg);
-  top: 0;
-}
-
-.menu-toggle.active .menu-icon::after {
-  transform: rotate(-45deg);
-  top: 0;
+.logo-text {
+  margin: 0;
+  white-space: nowrap;
 }
 
 /* 导航菜单 */
 .navbar-menu {
   display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: var(--spacing-24);
   align-items: center;
 }
 
-.navbar-nav {
-  display: flex;
-  list-style: none;
-  gap: 1.5rem;
-}
-
-/* 导航链接样式 */
-.nav-link {
+.navbar-item {
+  margin: 0;
   position: relative;
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s ease;
-  padding: 0.5rem 0;
 }
 
-.nav-link::after {
+.navbar-link {
+  display: inline-block;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  padding: var(--spacing-12) 0;
+  position: relative;
+  transition: all var(--transition-base);
+  line-height: 1;
+}
+
+.navbar-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background-color: var(--primary-color);
+  border-radius: 2px;
+  transition: all var(--transition-base);
+  transform: translateX(-50%);
+}
+
+.navbar-link:hover {
+  color: var(--primary-color);
+}
+
+.navbar-link:hover::after {
+  width: 100%;
+  left: 0;
+  transform: translateX(0);
+}
+
+.navbar-link.active {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.navbar-link.active::after {
   content: '';
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 0;
-  height: 2px;
-  background-color: var(--accent-color);
-  transition: width 0.3s ease;
-}
-
-.nav-link:hover::after,
-.nav-link.active::after {
   width: 100%;
+  height: 3px;
+  background-color: var(--primary-color);
+  border-radius: 2px;
+  transition: all var(--transition-base);
+  transform: none;
 }
 
-.nav-link:hover,
-.nav-link.active {
-  color: var(--accent-color);
-  text-decoration: none;
+/* 移动端菜单容器 */
+.mobile-menu-container {
+  display: none;
+  position: relative;
+}
+
+.mobile-menu-toggle {
+  background: none;
+  border: none;
+  font-size: var(--font-size-2xl);
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: var(--spacing-8);
+  transition: all var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--border-radius-base);
+}
+
+.mobile-menu-toggle:hover {
+  background-color: var(--bg-hover);
+}
+
+.menu-icon {
+  display: block;
+  line-height: 1;
 }
 
 /* 响应式设计 */
+@media (max-width: 1024px) {
+  .navbar-menu {
+    gap: var(--spacing-20);
+  }
+}
+
 @media (max-width: 768px) {
-  .menu-toggle {
+  /* 隐藏桌面菜单 */
+  .desktop-menu {
+    display: none;
+  }
+
+  /* 显示移动端菜单容器 */
+  .mobile-menu-container {
     display: block;
   }
 
-  .navbar-menu {
-    position: fixed;
-    top: 0;
-    right: -100%;
-    width: 250px;
-    height: 100vh;
-    background-color: var(--primary-color);
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    transition: right 0.3s ease;
-    z-index: 1000;
-    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
-  }
-
-  .navbar-menu.active {
+  /* 移动端菜单样式 */
+  .mobile-menu {
+    position: absolute;
+    top: 100%;
     right: 0;
-  }
-
-  .navbar-nav {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-base);
+    box-shadow: var(--shadow-lg);
+    padding: var(--spacing-8);
+    width: 200px;
+    z-index: 1000;
     flex-direction: column;
-    gap: 2rem;
-    text-align: center;
+    gap: var(--spacing-8);
+    margin-top: var(--spacing-4);
   }
 
-  .nav-link {
-    font-size: 1.2rem;
+  .navbar-item {
+    margin: 0;
+  }
+
+  .navbar-link {
+    display: block;
+    padding: var(--spacing-12) var(--spacing-16);
+    border-radius: var(--border-radius-base);
+    width: 100%;
+    text-align: left;
+  }
+
+  .navbar-link:hover {
+    background-color: var(--bg-hover);
+  }
+
+  .navbar-link.active::after {
+    display: none;
+  }
+
+  .navbar-link.active {
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+  }
+
+  .logo-text {
+    font-size: var(--font-size-base);
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 var(--spacing-16);
+  }
+
+  .logo-text {
+    font-size: var(--font-size-sm);
+  }
+
+  .mobile-menu {
+    width: 180px;
   }
 }
 </style>
