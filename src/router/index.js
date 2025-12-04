@@ -1,41 +1,32 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
-import About from '../views/About.vue'
-import Activities from '../views/Activities.vue'
-import Members from '../views/Members.vue'
-import Contact from '../views/Contact.vue'
-
-const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'About',
-    component: About
-  },
-  {
-    path: '/activities',
-    name: 'Activities',
-    component: Activities
-  },
-  {
-    path: '/members',
-    name: 'Members',
-    component: Members
-  },
-  {
-    path: '/contact',
-    name: 'Contact',
-    component: Contact
-  }
-]
+import {createRouter, createWebHashHistory} from 'vue-router'
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes
+    history: createWebHashHistory(import.meta.env.BASE_URL),
+    routes: [
+        {
+            path: '/',
+            name: 'home',
+            component: () => import('@/pages/HomeView.vue')
+        },
+        {
+            path: '/about',
+            name: 'about',
+            component: () => import('@/pages/AboutView.vue')
+        },
+        {
+            path: '/activities',
+            name: 'activities',
+            component: () => import('@/pages/ActivitiesView.vue')
+        },
+        {
+            path: '/join',
+            name: 'joinUs',
+            component: () => import('@/pages/JoinUsView.vue')
+        }
+    ],
+    scrollBehavior() {
+        return {top: 0}
+    }
 })
 
 export default router
