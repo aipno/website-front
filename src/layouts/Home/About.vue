@@ -4,25 +4,25 @@
       <div class="text-center mb-16">
         <h2 class="text-4xl font-bold mb-4">关于我们</h2>
         <p class="max-w-2xl mx-auto text-gray-700">
-          成立于2018年，专注于网络安全领域，致力于技术研究、人才培养和社会服务</p>
+          成立于2025年，专注于网络安全领域，致力于技术研究、人才培养和参与竞赛</p>
       </div>
       <div class="grid md:grid-cols-2 gap-12 items-center">
         <div>
           <p class="mb-6 text-lg leading-relaxed">
-            零壹网络安全社团聚集了一群对信息安全充满热情的精英，我们通过技术研究、实战演练和社会实践，
+            零壹网络安全社团聚集了一群对信息安全充满热情的精英，我们通过技术研究、实战演练和比赛实践，
             探索网络安全的边界，保护数字世界的安全。社团成员在各类CTF竞赛中屡获佳绩，同时积极为企业和社会组织提供安全评估服务。
           </p>
           <div class="grid grid-cols-3 gap-6 mt-10">
             <div class="text-center p-6 bg-white rounded-xl shadow-md">
-              <div class="text-4xl font-bold text-primary">10+</div>
+              <div class="text-4xl font-bold text-primary">5+</div>
               <p class="mt-2">核心成员</p>
             </div>
             <div class="text-center p-6 bg-white rounded-xl shadow-md">
-              <div class="text-4xl font-bold text-primary">50+</div>
+              <div class="text-4xl font-bold text-primary">10+</div>
               <p class="mt-2">赛事获奖</p>
             </div>
             <div class="text-center p-6 bg-white rounded-xl shadow-md">
-              <div class="text-4xl font-bold text-primary">100+</div>
+              <div class="text-4xl font-bold text-primary">10+</div>
               <p class="mt-2">技术分享</p>
             </div>
           </div>
