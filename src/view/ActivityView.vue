@@ -40,8 +40,8 @@
           </div>
 
           <!-- Info -->
-          <div v-for="(activity,id) in events.slice(0,1)" :key="id"
-              class="lg:col-span-2 p-8 flex flex-col justify-center">
+          <div v-for="(activity,id) in activities.slice(0,1)" :key="id"
+               class="lg:col-span-2 p-8 flex flex-col justify-center">
             <div class="flex items-center space-x-3 mb-4">
               <span
                   class="px-2 py-0.5 border border-cyber-red text-cyber-red text-xs font-mono rounded">LIVE_EVENT</span>
@@ -168,6 +168,7 @@
 
 <script setup>
 import {computed, onMounted, onUnmounted, ref} from 'vue';
+import {getActivityList} from "@/api/activity.js";
 
 const currentTime = ref('');
 const activeFilter = ref('all');
@@ -192,6 +193,26 @@ const updateCountdown = () => {
   countdown.value.seconds = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
 };
 
+const activities = ref([]);
+
+function getActivity() {
+  getActivityList().then(res => {
+    // 验证返回的数据是否为数组
+    if (Array.isArray(res)) {
+      activities.value = res;
+    } else if (res && Array.isArray(res.data)) {
+      activities.value = res.data;
+    } else {
+      activities.value = [];
+    }
+  }).catch(err => {
+    console.error('获取活动列表失败:', err);
+    activities.value = [];
+  });
+}
+
+getActivity();
+
 const filters = [
   {label: './ALL', value: 'all'},
   {label: './CTF', value: 'ctf'},
@@ -199,68 +220,23 @@ const filters = [
   {label: './SALON', value: 'salon'}
 ];
 
-const events = [
-  {
-    id: 1,
-    title: 'Web Security 101: SQL Injection',
-    date: '2023-10-28',
-    type: 'workshop',
-    status: 'finished',
-    description: '由 Spider 带领大家深入浅出地学习 SQL 注入原理，包括布尔盲注和报错注入。',
-    tags: ['sqlmap', 'burpsuite', 'web']
-  },
-  {
-    id: 2,
-    title: 'Mini-CTF: 新生挑战赛',
-    date: '2023-11-05',
-    type: 'ctf',
-    status: 'upcoming',
-    description: '面向新成员的轻量级 CTF 比赛，包含 Web、Crypto 和 Misc 题目。前三名有机械键盘奖励。',
-    tags: ['competition', 'beginner', 'prizes']
-  },
-  {
-    id: 3,
-    title: '周五沙龙：APT 攻击案例分析',
-    date: '2023-10-14',
-    type: 'salon',
-    status: 'finished',
-    description: '复盘近期著名的供应链攻击事件，分析黑客组织的渗透路径。',
-    tags: ['apt', 'red-team', 'case-study']
-  },
-  {
-    id: 4,
-    title: 'Linux Kernel Pwn 入门',
-    date: '2023-11-12',
-    type: 'workshop',
-    status: 'upcoming',
-    description: '高阶课程。需要具备 C 语言和操作系统基础。我们将尝试复现 Dirty Pipe 漏洞。',
-    tags: ['kernel', 'exploit', 'c']
-  },
-  {
-    id: 5,
-    title: 'DefCon 观影会 & 披萨派对',
-    date: '2023-09-20',
-    type: 'salon',
-    status: 'finished',
-    description: '一起观看 DefCon 31 的精彩演讲录像，享受美食与极客文化。',
-    tags: ['social', 'defcon', 'food']
-  },
-  {
-    id: 6,
-    title: 'XSS 跨站脚本攻击实战',
-    date: '2023-11-18',
-    type: 'workshop',
-    status: 'upcoming',
-    description: '搭建本地靶场，演示存储型与反射型 XSS 的利用与防御代码编写。',
-    tags: ['javascript', 'xss', 'defense']
-  }
-];
-
 const filteredEvents = computed(() => {
-  return events.filter(event => {
-    const matchesType = activeFilter.value === 'all' || event.type === activeFilter.value;
-    const matchesSearch = event.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-        event.description.toLowerCase().includes(searchQuery.value.toLowerCase());
+  // 提前转换搜索词为小写，避免重复转换
+  const searchTerm = (searchQuery.value || '').toLowerCase();
+
+  return activities.value.filter(activity => {
+    // 确保activity对象有效
+    if (!activity) return false;
+
+    // 类型过滤
+    const matchesType = activeFilter.value === 'all' || activity.type === activeFilter.value;
+
+    // 搜索过滤
+    const title = (activity.title || '').toLowerCase();
+    const description = (activity.description || '').toLowerCase();
+
+    const matchesSearch = !searchTerm || title.includes(searchTerm) || description.includes(searchTerm);
+
     return matchesType && matchesSearch;
   });
 });

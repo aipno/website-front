@@ -239,7 +239,6 @@ function getActivity() {
 }
 
 getActivity();
-console.log(activityList.value)
 
 // Scroll Handling
 /**
