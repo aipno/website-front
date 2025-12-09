@@ -126,7 +126,7 @@
                           class="hacker-input"
                           placeholder="01CTF{...}"
                       />
-                      <div class="absolute right-3 top-3 transition-colors">
+                      <div class="absolute right-3 top-0 transition-colors">
                         <i v-if="flagCorrect" class="fas fa-check-circle text-cyber-green animate-pulse"></i>
                         <i v-else-if="form.flag" class="fas fa-lock text-red-500"></i>
                         <i v-else class="fas fa-flag text-gray-600 group-hover:text-yellow-500"></i>
@@ -243,14 +243,13 @@ const form = reactive({
 
 // 兴趣标签选项
 const interestOptions = [
-  {label: 'Web Security', icon: 'fas fa-globe'},
-  {label: 'Reverse Engineering', icon: 'fas fa-cogs'},
-  {label: 'Cryptography', icon: 'fas fa-key'},
-  {label: 'Pwn / Binary', icon: 'fas fa-memory'},
-  {label: 'Mobile Security', icon: 'fas fa-mobile-alt'},
-  {label: 'IoT / Hardware', icon: 'fas fa-microchip'},
-  {label: 'Red Teaming', icon: 'fas fa-user-secret'},
-  {label: 'DevSecOps', icon: 'fas fa-server'}
+  {label: 'Web Security / WEB安全', icon: 'fas fa-globe'},
+  {label: 'Reverse / 逆向', icon: 'fas fa-cogs'},
+  {label: 'Cryptography / 密码学', icon: 'fas fa-key'},
+  {label: 'Pwn & Binary / 二进制', icon: 'fas fa-memory'},
+  {label: 'Red Teaming / 渗透', icon: 'fas fa-user-secret'},
+  {label: 'DevSecOps / 安全开发', icon: 'fas fa-server'},
+  {label: 'Officer / 事务官', icon: 'fas fa-briefcase'},
 ];
 
 const rules = reactive({
