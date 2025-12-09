@@ -115,39 +115,39 @@
 
       <!-- Events Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div v-for="event in filteredEvents" :key="event.id"
+        <div v-for="activity in filteredEvents" :key="activity.id"
              class="hologram-card rounded-lg group flex flex-col h-full">
           <!-- Status Bar -->
-          <div :class="getStatusColor(event.status)" class="h-1 w-full"></div>
+          <div :class="getStatusColor(activity.status)" class="h-1 w-full"></div>
 
           <div class="p-6 flex flex-col h-full">
             <div class="flex justify-between items-start mb-4">
               <div class="flex flex-col">
-                <span class="text-xs font-mono text-gray-500 mb-1">{{ event.date }}</span>
+                <span class="text-xs font-mono text-gray-500 mb-1">{{ formatDateTime(activity.date) }}</span>
                 <span class="text-[10px] border border-gray-700 px-1.5 rounded text-gray-400 font-mono w-max">
-                                    {{ event.type.toUpperCase() }}
+                                    {{ activity.type.toUpperCase() }}
                                 </span>
               </div>
-              <i :class="getIcon(event.type)"
-                 :style="{ color: getIconColor(event.type) }"
+              <i :class="getIcon(activity.type)"
+                 :style="{ color: getIconColor(activity.type) }"
                  class="text-2xl opacity-20 group-hover:opacity-100 transition-opacity duration-300"></i>
             </div>
 
             <h3 class="text-xl font-bold text-white mb-2 font-mono group-hover:text-cyber-green transition-colors">
-              {{ event.title }}</h3>
-            <p class="text-gray-400 text-sm mb-4 flex-grow">{{ event.description }}</p>
+              {{ activity.title }}</h3>
+            <p class="text-gray-400 text-sm mb-4 flex-grow">{{ activity.description }}</p>
 
             <!-- Tech Stack Tags -->
             <div class="flex flex-wrap gap-2 mb-6">
-              <span v-for="tag in event.tags" :key="tag"
+              <span v-for="tag in activity.tags" :key="tag"
                     class="text-[10px] bg-gray-900 text-gray-400 px-2 py-1 rounded font-mono">#{{ tag }}</span>
             </div>
 
             <div class="border-t border-gray-800 pt-4 flex justify-between items-center mt-auto">
                             <span
-                                :class="event.status === 'upcoming' ? 'text-cyber-green animate-pulse' : 'text-gray-600'"
+                                :class="activity.status === 'upcoming' ? 'text-cyber-green animate-pulse' : 'text-gray-600'"
                                 class="text-xs font-mono">
-                                [{{ event.status === 'upcoming' ? 'ONLINE' : 'OFFLINE' }}]
+                                [{{ activity.status === 'upcoming' ? 'ONLINE' : 'OFFLINE' }}]
                             </span>
               <button class="text-sm font-mono font-bold hover:text-cyber-green transition-colors flex items-center">
                 DETAILS <i class="fas fa-chevron-right ml-1 text-xs"></i>
@@ -182,14 +182,28 @@ const MILLISECONDS_PER_SECOND = 1000;
 const MILLISECONDS_PER_MINUTE = MILLISECONDS_PER_SECOND * 60;
 const MILLISECONDS_PER_HOUR = MILLISECONDS_PER_MINUTE * 60;
 const MILLISECONDS_PER_DAY = MILLISECONDS_PER_HOUR * 24;
-const DEMO_COUNTDOWN_DURATION = 258400000; // 3天左右的演示倒计时
+
+const activities = ref([]);
 
 const updateCountdown = () => {
-  const now = new Date().getTime();
-  // Mocking a future date for demo visual
-  const demoTarget = now + DEMO_COUNTDOWN_DURATION;
+  // 如果没有活动数据，重置倒计时为 00
+  if (!activities.value || activities.value.length === 0) {
+    countdown.value = {days: '00', hours: '00', minutes: '00', seconds: '00'};
+    return;
+  }
 
-  let distance = demoTarget - now;
+  // 获取第一个活动的时间
+  const firstActivityDate = activities.value[0].date;
+
+  if (!firstActivityDate) {
+    countdown.value = {days: '00', hours: '00', minutes: '00', seconds: '00'};
+    return;
+  }
+
+  const targetDate = new Date(firstActivityDate).getTime();
+  const now = new Date().getTime();
+
+  let distance = targetDate - now;
 
   // 处理倒计时结束的情况
   if (distance < 0) {
@@ -201,8 +215,6 @@ const updateCountdown = () => {
   countdown.value.minutes = Math.floor((distance % MILLISECONDS_PER_HOUR) / MILLISECONDS_PER_MINUTE).toString().padStart(2, '0');
   countdown.value.seconds = Math.floor((distance % MILLISECONDS_PER_MINUTE) / MILLISECONDS_PER_SECOND).toString().padStart(2, '0');
 };
-
-const activities = ref([]);
 
 function getActivity() {
   getActivityList().then(res => {
@@ -233,7 +245,8 @@ const filteredEvents = computed(() => {
   // 提前转换搜索词为小写，避免重复转换
   const searchTerm = (searchQuery.value || '').toLowerCase();
 
-  return activities.value.slice(1,7).filter(activity => {
+  // 从第二个活动开始显示在列表中（因为第一个在 Featured 区域显示）
+  return activities.value.slice(1, 7).filter(activity => {
     // 确保activity对象有效
     if (!activity) return false;
 

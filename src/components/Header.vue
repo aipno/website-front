@@ -13,7 +13,7 @@
             </el-icon>
           </div>
           <span class="font-mono text-xl font-bold tracking-wider text-white">
-                        0x<span class="text-hacker-green">SHIELD</span>
+                        01<span class="text-hacker-green">WEBSEC</span>
                     </span>
         </div>
 

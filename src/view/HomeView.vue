@@ -79,9 +79,9 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-end mb-12 border-b border-gray-800 pb-4">
           <div>
-            <h2 class="text-3xl font-bold text-white font-mono"><span class="text-cyber-green">./</span> 最新动态</h2>
+            <h2 class="text-3xl font-bold text-white font-mono"><span class="text-cyber-green">./</span> 最近活动</h2>
           </div>
-          <a class="text-sm text-cyber-green font-mono hover:underline hidden sm:block" href="#">VIEW_ALL_LOGS</a>
+          <router-link class="text-sm text-cyber-green font-mono hover:underline hidden sm:block" to="/activity">VIEW_ALL_ACTIVITIES</router-link>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -91,18 +91,26 @@
                 class="absolute top-0 right-0 bg-cyber-green text-cyber-black text-xs font-bold px-3 py-1 font-mono z-10">
               NEW
             </div>
-            <div v-for="(activity, id) in activityList.slice(0,1)" :key="id"
-                 class="h-64 bg-gray-800 relative overflow-hidden">
+            <div class="h-64 bg-gray-800 relative overflow-hidden">
               <!-- Abstract coding background for image placeholder -->
               <div class="absolute inset-0 bg-gradient-to-t from-cyber-black to-transparent z-10"></div>
-              <div class="w-full h-full bg-gray-800 flex items-center justify-center">
-                <i class="fas fa-newspaper text-5xl text-gray-600"></i>
+              <div v-for="(activity, id) in activityList.slice(0, 1)" :key="id">
+                <div class="w-full h-full bg-gray-800 flex items-center justify-center">
+                  <img :src="activity.cover" alt="Activity Image"
+                       class="w-auto h-auto"/>
+
+                </div>
+                <div class="absolute bottom-0 left-0 p-6 z-20">
+                  <span class="text-cyber-green text-xs font-mono mb-2 block">{{ formatDateTime(activity?.date || '') }}</span>
+                  <h3 class="text-2xl font-bold text-white mb-2">{{ activity?.title || '' }}</h3>
+                  <p class="text-gray-300 text-sm line-clamp-2">
+                    {{ activity?.description || '' }}</p>
+                </div>
               </div>
-              <div class="absolute bottom-0 left-0 p-6 z-20">
-                <span class="text-cyber-green text-xs font-mono mb-2 block">{{ activity.date }}</span>
-                <h3 class="text-2xl font-bold text-white mb-2">{{ activity.title }}</h3>
-                <p class="text-gray-300 text-sm line-clamp-2">
-                  {{ activity.description }}</p>
+              <!-- 当没有活动时的默认显示 -->
+              <div v-if="!activityList || activityList.length === 0"
+                   class="w-full h-full bg-gray-800 flex items-center justify-center">
+                <i class="fas fa-newspaper text-5xl text-gray-600"></i>
               </div>
             </div>
           </div>
@@ -115,7 +123,7 @@
                 <div class="w-2 h-2 rounded-full bg-cyber-green animate-pulse"></div>
               </div>
               <div>
-                <span class="text-xs text-gray-500 font-mono block mb-1">{{ activity.date }}</span>
+                <span class="text-xs text-gray-500 font-mono block mb-1">{{ formatDateTime(activity.date) }}</span>
                 <h4 class="text-white font-medium hover:text-cyber-green transition-colors text-sm">{{
                     activity.title
                   }}</h4>
@@ -238,8 +246,6 @@ function getActivity() {
   })
 }
 
-getActivity();
-
 // Scroll Handling
 /**
  * 处理页面滚动事件，当滚动超过20像素时更新isScrolled状态
@@ -312,7 +318,7 @@ const initMatrix = () => {
   window.addEventListener('resize', resizeCanvas);
   resizeCanvas();
 
-  const letters = '01010101001JSCFA01WEBSECCLUB';
+  const letters = '0101010101010101010101ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   const fontSize = 14;
   const columns = canvas.width / fontSize;
   const drops = Array(Math.floor(columns)).fill(1);
@@ -350,10 +356,32 @@ const initMatrix = () => {
 let matrixInterval;
 
 /**
+ * 格式化日期时间
+ * @param {string|number|Date} date - 需要格式化的日期时间
+ * @returns {string} 格式化后的日期时间字符串，格式为 YYYY-MM-DD HH:mm:ss
+ */
+const formatDateTime = (date) => {
+  const d = new Date(date);
+  if (isNaN(d.getTime())) {
+    return ''; // 无效日期返回空字符串
+  }
+
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const hours = String(d.getHours()).padStart(2, '0');
+  const minutes = String(d.getMinutes()).padStart(2, '0');
+  const seconds = String(d.getSeconds()).padStart(2, '0');
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+};
+
+/**
  * Vue组件挂载时执行的生命周期钩子
  * 注册事件监听器，启动动画和打字效果
  */
 onMounted(() => {
+  getActivity();
   window.addEventListener('scroll', handleScroll);
   setTimeout(typeWriter, 500);
   matrixInterval = initMatrix();

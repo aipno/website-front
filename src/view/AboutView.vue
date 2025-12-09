@@ -18,16 +18,16 @@
               <div class="w-3 h-3 rounded-full bg-red-500"></div>
               <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
               <div class="w-3 h-3 rounded-full bg-green-500"></div>
-              <span class="ml-2 text-gray-500 text-xs">root@0xshield:~/mission</span>
+              <span class="ml-2 text-gray-500 text-xs">root@01websec:~/mission</span>
             </div>
             <div class="text-gray-300 space-y-4">
-              <p><span class="text-cyber-green">root@0xshield:~$</span> cat description.txt</p>
+              <p><span class="text-cyber-green">root@01websec:~$</span> cat description.txt</p>
               <p class="leading-relaxed">
-                0xShield 是一个由热衷于网络攻防技术的极客组成的学生社团。我们信奉“以攻促防”的理念，致力于探索二进制世界的奥秘。
+                01Websec 是一个由热衷于网络攻防技术的极客组成的学生社团。我们信奉“以攻促防”的理念，致力于探索二进制世界的奥秘。
                 <br><br>
                 在这里，没有枯燥的理论，只有真实的靶场、高强度的 CTF 训练以及通宵达旦的代码审计。我们是校园网络安全的守护者，也是未来的白帽子黑客。
               </p>
-              <p class="terminal-cursor"><span class="text-cyber-green">root@0xshield:~$</span> <span
+              <p class="terminal-cursor"><span class="text-cyber-green">root@01websec:~$</span> <span
                   class="text-gray-500">_</span></p>
             </div>
             <!-- Corner decorations -->
@@ -41,7 +41,7 @@
               <i class="fas fa-fingerprint text-9xl"></i>
             </div>
             <div class="text-center z-10">
-              <div class="text-5xl font-mono font-bold text-white mb-2 counter">101010</div>
+              <div class="text-5xl font-mono font-bold text-white mb-2 counter">0010 0000 1000</div>
               <div class="text-cyber-green font-mono text-sm tracking-[0.3em]">SECURE CONNECTION</div>
             </div>
           </div>
@@ -136,7 +136,7 @@
           <i class="fas fa-network-wired text-5xl text-cyber-green mb-6 opacity-80"></i>
           <h2 class="text-3xl md:text-4xl font-bold text-white font-mono mb-4">加入我们的实验室</h2>
           <p class="text-gray-400 max-w-2xl mx-auto mb-8 font-mono">
-            我们每周二、四晚上在<span class="text-white">信息楼 404</span>举行线下沙龙。带上你的笔记本电脑，连接我们的内网靶场，开始你的黑客之旅。
+            我们每周二、四晚上在<span class="text-white">行健楼#3 网络安全实训基地</span>举行线下沙龙。带上你的笔记本电脑，连接我们的内网靶场，开始你的黑客之旅。
           </p>
           <button
               class="bg-transparent hover:bg-cyber-green text-cyber-green hover:text-cyber-black font-mono font-bold py-3 px-8 border border-cyber-green rounded transition-all duration-300 hover:shadow-[0_0_15px_#00ff41]">

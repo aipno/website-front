@@ -19,7 +19,7 @@ SYSTEM_EOF
             <el-icon :size="20" color="#00ff41">
               <component :is="'Platform'"/>
             </el-icon>
-            <span class="font-mono text-lg font-bold text-white">0xSHIELD</span>
+            <span class="font-mono text-lg font-bold text-white">01WEBSEC</span>
           </div>
           <p class="text-gray-500 text-sm mb-4">
             致力培养下一代白帽黑客。<br>
@@ -44,10 +44,10 @@ SYSTEM_EOF
         <div>
           <h3 class="text-white font-mono font-bold mb-4 text-sm uppercase tracking-wider">>> SITEMAP</h3>
           <ul class="space-y-2 text-sm text-gray-400 font-mono">
-            <li><a class="hover:text-hacker-green transition-colors" href="#">./home</a></li>
-            <li><a class="hover:text-hacker-green transition-colors" href="#">./about_us</a></li>
-            <li><a class="hover:text-hacker-green transition-colors" href="#">./join_us</a></li>
-            <li><a class="hover:text-hacker-green transition-colors" href="#">./wiki</a></li>
+            <li><router-link class="hover:text-hacker-green transition-colors" to="/">/home</router-link></li>
+            <li><router-link class="hover:text-hacker-green transition-colors" to="/about">/about</router-link></li>
+            <li><router-link class="hover:text-hacker-green transition-colors" to="/activity">/activities</router-link></li>
+            <li><router-link class="hover:text-hacker-green transition-colors" to="/join">/join</router-link></li>
           </ul>
         </div>
 
