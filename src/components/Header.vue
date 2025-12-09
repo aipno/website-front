@@ -1,5 +1,4 @@
 <template>
-  <!-- ================= HEADER START ================= -->
   <nav class="fixed w-full z-50 bg-hacker-dark/90 backdrop-blur border-b border-gray-800">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
@@ -14,7 +13,7 @@
             </el-icon>
           </div>
           <span class="font-mono text-xl font-bold tracking-wider text-white">
-                        0x<span class="text-hacker-green">SHIELD</span>
+                        01<span class="text-hacker-green">WEBSEC</span>
                     </span>
         </div>
 
@@ -22,9 +21,9 @@
         <div class="hidden md:block">
           <div class="ml-10 flex items-baseline space-x-8 font-mono text-sm">
             <router-link class="nav-link text-white px-3 py-2" to="/">/home</router-link>
-            <router-link class="nav-link text-gray-300 px-3 py-2" to="/about">./about</router-link>
-            <router-link class="nav-link text-gray-300 px-3 py-2" to="/activity">./activities</router-link>
-            <a class="nav-link text-gray-300 px-3 py-2" href="https://docs.websec.org.cn" target="_blank">./docs</a>
+            <router-link class="nav-link text-gray-300 px-3 py-2" to="/about">/about</router-link>
+            <router-link class="nav-link text-gray-300 px-3 py-2" to="/activity">/activities</router-link>
+            <a class="nav-link text-gray-300 px-3 py-2" href="https://docs.websec.org.cn" target="_blank">/docs</a>
           </div>
         </div>
 
@@ -41,8 +40,8 @@
             <span>NET: ONLINE</span>
           </div>
 
-          <el-button class="font-mono font-bold" size="small" type="primary" @click="handleLogin">
-            > LOGIN
+          <el-button class="font-mono font-bold" size="small" type="primary">
+            <router-link to="/join">> JOIN_US</router-link>
           </el-button>
         </div>
 
@@ -60,20 +59,28 @@
     <!-- Mobile Menu Panel -->
     <div v-show="mobileMenuOpen" class="md:hidden bg-hacker-gray border-b border-gray-800 absolute w-full">
       <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 font-mono">
-        <a class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-800" href="#">> /home</a>
-        <a class="text-gray-300 block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-800" href="#">>
-          ./about</a>
-        <a class="text-gray-300 block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-800" href="#">>
-          ./activities</a>
-        <a class="text-gray-300 block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-800" href="#">>
-          ./ctf_rank</a>
+        <router-link class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-800" to="/">>
+          /home
+        </router-link>
+        <router-link class="text-gray-300 block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-800"
+                     to="/about">>
+          /about
+        </router-link>
+        <router-link class="text-gray-300 block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-800"
+                     to="/activity">>
+          /activities
+        </router-link>
+        <a class="text-gray-300 block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-800"
+           href="https://docs.websec.org.cn">>
+          /docs</a>
         <div class="pt-4 px-3">
-          <el-button class="w-full" type="primary">LOGIN_SHELL</el-button>
+          <el-button class="w-full" type="primary">
+            <router-link to="/join">JOIN_US</router-link>
+          </el-button>
         </div>
       </div>
     </div>
   </nav>
-  <!-- ================= HEADER END ================= -->
 </template>
 
 <script setup>

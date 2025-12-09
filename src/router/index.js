@@ -1,7 +1,7 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import {createRouter, createWebHashHistory} from 'vue-router'
 
 const router = createRouter({
-    history: createWebHistory(import.meta.env.BASE_URL),
+    history: createWebHashHistory(import.meta.env.BASE_URL),
     routes: [
         {
             path: '/',
@@ -23,7 +23,15 @@ const router = createRouter({
             name: 'joinUs',
             component: () => import('@/view/JoinUsView.vue')
         }
-    ]
+    ],
+    scrollBehavior(to, from, savedPosition) {
+        // 如果有保存的位置（如浏览器前进后退），则返回保存的位置
+        if (savedPosition) {
+            return savedPosition
+        } else {
+            // 否则滚动到页面顶部
+            return { top: 0 }
+        }
+    }
 })
-
 export default router

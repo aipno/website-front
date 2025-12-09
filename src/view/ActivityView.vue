@@ -1,149 +1,5 @@
-<script setup>
-import {computed, onMounted, onUnmounted, ref} from 'vue';
-
-const currentTime = ref('');
-const activeFilter = ref('all');
-const searchQuery = ref('');
-
-// Countdown Logic
-const countdown = ref({days: '00', hours: '00', minutes: '00', seconds: '00'});
-const targetDate = new Date('2023-11-20T09:00:00').getTime(); // Example date
-
-const updateCountdown = () => {
-  // For demo purposes, let's just make it a random future date if expired
-  // In real app, use targetDate
-  const now = new Date().getTime();
-  // Mocking a future date for demo visual
-  const demoTarget = now + 258400000;
-
-  const distance = demoTarget - now;
-
-  countdown.value.days = Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
-  countdown.value.hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
-  countdown.value.minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
-  countdown.value.seconds = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
-};
-
-const filters = [
-  {label: './ALL', value: 'all'},
-  {label: './CTF', value: 'ctf'},
-  {label: './WORKSHOP', value: 'workshop'},
-  {label: './SALON', value: 'salon'}
-];
-
-const events = [
-  {
-    id: 1,
-    title: 'Web Security 101: SQL Injection',
-    date: '2023-10-28',
-    type: 'workshop',
-    status: 'finished',
-    desc: '由 Spider 带领大家深入浅出地学习 SQL 注入原理，包括布尔盲注和报错注入。',
-    tags: ['sqlmap', 'burpsuite', 'web']
-  },
-  {
-    id: 2,
-    title: 'Mini-CTF: 新生挑战赛',
-    date: '2023-11-05',
-    type: 'ctf',
-    status: 'upcoming',
-    desc: '面向新成员的轻量级 CTF 比赛，包含 Web、Crypto 和 Misc 题目。前三名有机械键盘奖励。',
-    tags: ['competition', 'beginner', 'prizes']
-  },
-  {
-    id: 3,
-    title: '周五沙龙：APT 攻击案例分析',
-    date: '2023-10-14',
-    type: 'salon',
-    status: 'finished',
-    desc: '复盘近期著名的供应链攻击事件，分析黑客组织的渗透路径。',
-    tags: ['apt', 'red-team', 'case-study']
-  },
-  {
-    id: 4,
-    title: 'Linux Kernel Pwn 入门',
-    date: '2023-11-12',
-    type: 'workshop',
-    status: 'upcoming',
-    desc: '高阶课程。需要具备 C 语言和操作系统基础。我们将尝试复现 Dirty Pipe 漏洞。',
-    tags: ['kernel', 'exploit', 'c']
-  },
-  {
-    id: 5,
-    title: 'DefCon 观影会 & 披萨派对',
-    date: '2023-09-20',
-    type: 'salon',
-    status: 'finished',
-    desc: '一起观看 DefCon 31 的精彩演讲录像，享受美食与极客文化。',
-    tags: ['social', 'defcon', 'food']
-  },
-  {
-    id: 6,
-    title: 'XSS 跨站脚本攻击实战',
-    date: '2023-11-18',
-    type: 'workshop',
-    status: 'upcoming',
-    desc: '搭建本地靶场，演示存储型与反射型 XSS 的利用与防御代码编写。',
-    tags: ['javascript', 'xss', 'defense']
-  }
-];
-
-const filteredEvents = computed(() => {
-  return events.filter(event => {
-    const matchesType = activeFilter.value === 'all' || event.type === activeFilter.value;
-    const matchesSearch = event.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-        event.desc.toLowerCase().includes(searchQuery.value.toLowerCase());
-    return matchesType && matchesSearch;
-  });
-});
-
-// Utilities
-const getStatusColor = (status) => {
-  return status === 'upcoming' ? 'bg-cyber-green' : 'bg-gray-700';
-};
-
-const getIcon = (type) => {
-  const map = {
-    'ctf': 'fas fa-flag',
-    'workshop': 'fas fa-laptop-code',
-    'salon': 'fas fa-comments',
-    'social': 'fas fa-glass-cheers'
-  };
-  return map[type] || 'fas fa-calendar';
-};
-
-const getIconColor = (type) => {
-  const map = {
-    'ctf': '#ff2a2a', // Red for combat
-    'workshop': '#00ff41', // Green for code
-    'salon': '#00f0ff', // Blue for talk
-  };
-  return map[type] || '#ccc';
-};
-
-const updateTime = () => {
-  const now = new Date();
-  currentTime.value = now.toLocaleTimeString('en-GB', {hour12: false});
-};
-
-let timerInterval;
-let timeInterval;
-
-onMounted(() => {
-  timerInterval = setInterval(updateCountdown, 1000);
-  timeInterval = setInterval(updateTime, 1000);
-  updateCountdown();
-  updateTime();
-});
-
-onUnmounted(() => {
-  clearInterval(timerInterval);
-  clearInterval(timeInterval);
-});
-</script>
-
 <template>
-  <div class="relative min-h-screen flex flex-col font-sans antialiased bg-hex-pattern">
+  <section class="relative min-h-screen flex flex-col font-sans antialiased bg-hex-pattern">
 
     <!-- Main Content -->
     <main class="flex-grow pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
@@ -184,16 +40,18 @@ onUnmounted(() => {
           </div>
 
           <!-- Info -->
-          <div class="lg:col-span-2 p-8 flex flex-col justify-center">
+          <div v-for="(activity,id) in activities.slice(0,1)" :key="id"
+               class="lg:col-span-2 p-8 flex flex-col justify-center">
             <div class="flex items-center space-x-3 mb-4">
               <span
                   class="px-2 py-0.5 border border-cyber-red text-cyber-red text-xs font-mono rounded">LIVE_EVENT</span>
-              <span class="text-gray-400 text-sm font-mono"><i class="far fa-clock mr-1"></i>2023-11-20 09:00</span>
+              <span class="text-gray-400 text-sm font-mono"><i
+                  class="far fa-clock mr-1"></i>{{ formatDateTime(activity.date) }}</span>
             </div>
 
-            <h2 class="text-3xl font-bold text-white mb-4 glitch-text">冬季攻防演练：红蓝对抗</h2>
+            <h2 class="text-3xl font-bold text-white mb-4 glitch-text">{{ activity.title }}</h2>
             <p class="text-gray-400 mb-6 font-mono text-sm leading-relaxed">
-              本年度最大规模的实战演练。红队由校友战队组成，蓝队由在校成员防守。环境包括内网域渗透、Docker逃逸及Web逻辑漏洞挖掘。这是一场不容错过的实战机会。
+              {{ activity.description }}
             </p>
 
             <div
@@ -257,38 +115,39 @@ onUnmounted(() => {
 
       <!-- Events Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div v-for="event in filteredEvents" :key="event.id"
+        <div v-for="activity in filteredEvents" :key="activity.id"
              class="hologram-card rounded-lg group flex flex-col h-full">
           <!-- Status Bar -->
-          <div :class="getStatusColor(event.status)" class="h-1 w-full"></div>
+          <div :class="getStatusColor(activity.status)" class="h-1 w-full"></div>
 
           <div class="p-6 flex flex-col h-full">
             <div class="flex justify-between items-start mb-4">
               <div class="flex flex-col">
-                <span class="text-xs font-mono text-gray-500 mb-1">{{ event.date }}</span>
+                <span class="text-xs font-mono text-gray-500 mb-1">{{ formatDateTime(activity.date) }}</span>
                 <span class="text-[10px] border border-gray-700 px-1.5 rounded text-gray-400 font-mono w-max">
-                                    {{ event.type.toUpperCase() }}
+                                    {{ activity.type.toUpperCase() }}
                                 </span>
               </div>
-              <i :class="getIcon(event.type)"
-                 :style="{ color: getIconColor(event.type) }"
+              <i :class="getIcon(activity.type)"
+                 :style="{ color: getIconColor(activity.type) }"
                  class="text-2xl opacity-20 group-hover:opacity-100 transition-opacity duration-300"></i>
             </div>
 
             <h3 class="text-xl font-bold text-white mb-2 font-mono group-hover:text-cyber-green transition-colors">
-              {{ event.title }}</h3>
-            <p class="text-gray-400 text-sm mb-4 flex-grow">{{ event.desc }}</p>
+              {{ activity.title }}</h3>
+            <p class="text-gray-400 text-sm mb-4 flex-grow">{{ activity.description }}</p>
 
             <!-- Tech Stack Tags -->
             <div class="flex flex-wrap gap-2 mb-6">
-              <span v-for="tag in event.tags" :key="tag"
+              <span v-for="tag in activity.tags" :key="tag"
                     class="text-[10px] bg-gray-900 text-gray-400 px-2 py-1 rounded font-mono">#{{ tag }}</span>
             </div>
 
             <div class="border-t border-gray-800 pt-4 flex justify-between items-center mt-auto">
-                            <span :class="event.status === 'upcoming' ? 'text-cyber-green animate-pulse' : 'text-gray-600'"
-                                  class="text-xs font-mono">
-                                [{{ event.status === 'upcoming' ? 'ONLINE' : 'OFFLINE' }}]
+                            <span
+                                :class="activity.status === 'upcoming' ? 'text-cyber-green animate-pulse' : 'text-gray-600'"
+                                class="text-xs font-mono">
+                                [{{ activity.status === 'upcoming' ? 'ONLINE' : 'OFFLINE' }}]
                             </span>
               <button class="text-sm font-mono font-bold hover:text-cyber-green transition-colors flex items-center">
                 DETAILS <i class="fas fa-chevron-right ml-1 text-xs"></i>
@@ -305,15 +164,175 @@ onUnmounted(() => {
       </div>
 
     </main>
-
-    <!-- Footer -->
-    <footer class="bg-black/80 border-t border-gray-900 py-6 text-center">
-      <div class="text-xs text-gray-600 font-mono">
-        SECURE CHANNEL ESTABLISHED. END OF TRANSMISSION.
-      </div>
-    </footer>
-  </div>
+  </section>
 </template>
+
+<script setup>
+import {computed, onMounted, onUnmounted, ref} from 'vue';
+import {getActivityList} from "@/api/activity.js";
+
+const currentTime = ref('');
+const activeFilter = ref('all');
+const searchQuery = ref('');
+
+// Countdown Logic
+const countdown = ref({days: '00', hours: '00', minutes: '00', seconds: '00'});
+
+const MILLISECONDS_PER_SECOND = 1000;
+const MILLISECONDS_PER_MINUTE = MILLISECONDS_PER_SECOND * 60;
+const MILLISECONDS_PER_HOUR = MILLISECONDS_PER_MINUTE * 60;
+const MILLISECONDS_PER_DAY = MILLISECONDS_PER_HOUR * 24;
+
+const activities = ref([]);
+
+const updateCountdown = () => {
+  // 如果没有活动数据，重置倒计时为 00
+  if (!activities.value || activities.value.length === 0) {
+    countdown.value = {days: '00', hours: '00', minutes: '00', seconds: '00'};
+    return;
+  }
+
+  // 获取第一个活动的时间
+  const firstActivityDate = activities.value[0].date;
+
+  if (!firstActivityDate) {
+    countdown.value = {days: '00', hours: '00', minutes: '00', seconds: '00'};
+    return;
+  }
+
+  const targetDate = new Date(firstActivityDate).getTime();
+  const now = new Date().getTime();
+
+  let distance = targetDate - now;
+
+  // 处理倒计时结束的情况
+  if (distance < 0) {
+    distance = 0;
+  }
+
+  countdown.value.days = Math.floor(distance / MILLISECONDS_PER_DAY).toString().padStart(2, '0');
+  countdown.value.hours = Math.floor((distance % MILLISECONDS_PER_DAY) / MILLISECONDS_PER_HOUR).toString().padStart(2, '0');
+  countdown.value.minutes = Math.floor((distance % MILLISECONDS_PER_HOUR) / MILLISECONDS_PER_MINUTE).toString().padStart(2, '0');
+  countdown.value.seconds = Math.floor((distance % MILLISECONDS_PER_MINUTE) / MILLISECONDS_PER_SECOND).toString().padStart(2, '0');
+};
+
+function getActivity() {
+  getActivityList().then(res => {
+    // 验证返回的数据是否为数组
+    if (Array.isArray(res)) {
+      activities.value = res;
+    } else if (res && Array.isArray(res.data)) {
+      activities.value = res.data;
+    } else {
+      activities.value = [];
+    }
+  }).catch(err => {
+    console.error('获取活动列表失败:', err);
+    activities.value = [];
+  });
+}
+
+getActivity();
+
+const filters = [
+  {label: './ALL', value: 'all'},
+  {label: './CTF', value: 'ctf'},
+  {label: './WORKSHOP', value: 'workshop'},
+  {label: './SALON', value: 'salon'}
+];
+
+const filteredEvents = computed(() => {
+  // 提前转换搜索词为小写，避免重复转换
+  const searchTerm = (searchQuery.value || '').toLowerCase();
+
+  // 从第二个活动开始显示在列表中（因为第一个在 Featured 区域显示）
+  return activities.value.slice(1, 7).filter(activity => {
+    // 确保activity对象有效
+    if (!activity) return false;
+
+    // 类型过滤
+    const matchesType = activeFilter.value === 'all' || activity.type === activeFilter.value;
+
+    // 搜索过滤
+    const title = (activity.title || '').toLowerCase();
+    const description = (activity.description || '').toLowerCase();
+
+    const matchesSearch = !searchTerm || title.includes(searchTerm) || description.includes(searchTerm);
+
+    return matchesType && matchesSearch;
+  });
+});
+
+// Utilities
+const getStatusColor = (status) => {
+  return status === 'upcoming' ? 'bg-cyber-green' : 'bg-gray-700';
+};
+
+const getIcon = (type) => {
+  const map = {
+    'ctf': 'fas fa-flag',
+    'workshop': 'fas fa-laptop-code',
+    'salon': 'fas fa-comments',
+    'social': 'fas fa-glass-cheers'
+  };
+  return map[type] || 'fas fa-calendar';
+};
+
+const getIconColor = (type) => {
+  const map = {
+    'ctf': '#ff2a2a', // Red for combat
+    'workshop': '#00ff41', // Green for code
+    'salon': '#00f0ff', // Blue for talk
+  };
+  return map[type] || '#ccc';
+};
+
+const updateTime = () => {
+  const now = new Date();
+  currentTime.value = now.toLocaleTimeString('cn-ZH', {hour12: false});
+};
+
+/**
+ * 格式化日期时间
+ * @param {string|number|Date} date - 需要格式化的日期时间
+ * @returns {string} 格式化后的日期时间字符串，格式为 YYYY-MM-DD HH:mm:ss
+ */
+const formatDateTime = (date) => {
+  const d = new Date(date);
+  if (isNaN(d.getTime())) {
+    return ''; // 无效日期返回空字符串
+  }
+
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const hours = String(d.getHours()).padStart(2, '0');
+  const minutes = String(d.getMinutes()).padStart(2, '0');
+  const seconds = String(d.getSeconds()).padStart(2, '0');
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+};
+
+let timerInterval;
+let timeInterval;
+
+/**
+ * 组件挂载时启动定时器
+ * 设置两个定时器分别用于更新倒计时和当前时间显示
+ * 并立即执行一次更新函数以初始化显示
+ */
+onMounted(() => {
+  timerInterval = setInterval(updateCountdown, 1000);
+  timeInterval = setInterval(updateTime, 1000);
+  updateCountdown();
+  updateTime();
+});
+
+onUnmounted(() => {
+  clearInterval(timerInterval);
+  clearInterval(timeInterval);
+});
+</script>
 
 <style scoped>
 /* Radar Animation */
