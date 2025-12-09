@@ -3,7 +3,7 @@ import {showMessage} from "@/composables/utils.js";
 
 
 const instance = axios.create({
-    baseURL: "/api",
+    baseURL: "/",
     timeout: 7000,
 });
 
